@@ -1,6 +1,29 @@
-void exsist_list_page() {
-
+#include <stdio.h>
+#include "func.h"
+void exsist_list_page(int *list_count) {
+	printf("#############################################\n");
+	printf("현재 구매한 종목 개수: %d\n",*list_count);
+	printf("종목을 보려면 1을 눌러 확인하십쇼\n");
+	printf("종목 추가는 2번입니다.\n");
+	printf("\n");
+	printf("1. 종목 확인\n");
+	printf("2. 종목 추가\n");
+	printf("3.현재 떨어진 가격 매우려면?\n");
+	printf("4. 수수료 계산\n");
+	printf("5. 이익을 본 주식을 다 팔면?\n");
+	printf("6. 나가기\n");
+	printf("메뉴를 선택하시오:");
 }
 void unexsist_list_page() {
-
+	printf("#############################################\n");
+	printf("현재 구매한 종목: 존재하지 않음\n");
+	printf("종목 추가는 2번입니다.\n");
+	printf("\n");
+	printf("1. 종목 확인(현재 구매한 종목이 없으므로 2번을 선택해서 종목을 추가하여 주세요)\n");
+	printf("2. 종목 추가\n");
+	printf("3.현재 떨어진 가격 매우려면?(현재 구매한 종목이 없으므로 2번을 선택해서 종목을 추가하여 주세요)\n");
+	printf("4. 수수료 계산(현재 구매한 종목이 없으므로 2번을 선택해서 종목을 추가하여 주세요)\n");
+	printf("5. 이익을 본 주식을 다 팔면?(현재 구매한 종목이 없으므로 2번을 선택해서 종목을 추가하여 주세요)\n");
+	printf("6. 나가기\n");
+	printf("메뉴를 선택하시오:");
 }
