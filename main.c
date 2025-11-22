@@ -36,6 +36,7 @@ int main() {
 	int menu = 0;//메뉴값을 받기 위한 변수
 	node_type* head = NULL;
 	int list_count= length_list(head);//리스트 갯수를 받아내기 위한 변수
+	
 
 	/* linked list를 응용하기 ->11주차 응용*/
 	while (menu != 7) //
@@ -45,22 +46,19 @@ int main() {
 
 			scanf_s("%d", &menu);//메뉴값 받기
 			if (menu == 1) {
-				list_check(head); //리스트 내용 확인하기
+				list_check(&head); //리스트 내용 확인하기
 			}
 			else if (menu == 2) {
 				list_add(&head); //리스트 추가하기
 				is_list_exsist = 1;
 				list_count++;
 			}
+			else if (menu == 3) {
+				delete_stock(&head, &list_count, &is_list_exsist);
+			}
 			else if (menu == 4) {
 				add_stock(&head); //주 기능 -> 마이너스 된 가격 매우는 기능
-				if (list_count == 1) {
-					is_list_exsist = 0;
-					list_count = 0;
-				}
-			}
-			else if (menu == 3) {
-				delete_stock(&head);
+
 			}
 			else if (menu == 5) {
 				charge_calculate(&head); //수수료 연산 기능

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "page.h"
 void exsist_list_page(int *list_count) {
 	printf("#############################################\n");
 	printf("현재 구매한 종목 개수: %d\n",*list_count);

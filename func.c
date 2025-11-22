@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "page.h"
 
-void list_check(node_type** head) {
+void list_check(node_type** head) {//리스트 출력
     node_type* p = *head;
     printf("\n");
     printf("\n");
@@ -30,15 +30,15 @@ void list_add(node_type** head)
         printf("메모리 할당 실패\n");
         return;
     }
-    int idx = 1;
+    int idx = 1;//인덱스 삽입을 위한 변수
     node_type* t = *head;
     while (t != NULL) {
         idx++;
         t = t->next;
     }
-    newNode->data.index = idx;
+    newNode->data.index = idx; //index에 변수에 할당된 수 추가
     printf("추가할 주식 이름을 입력하세요: ");
-    scanf_s("%s", newNode->data.stock_name, (unsigned)_countof(newNode->data.stock_name));
+    scanf_s("%s", newNode->data.stock_name, (unsigned)_countof(newNode->data.stock_name)); //string을 사용하기 때문에 countof 사용
 
     printf("과거 가격을 입력하세요: ");
     scanf_s("%d", &newNode->data.past_price);
@@ -69,7 +69,17 @@ void list_add(node_type** head)
 
     printf("새 주식이 리스트에 추가되었습니다.\n");
 }
-void delete_stock(node_type** head) {
+void reorder_index(node_type* head) { //index 재정렬을 위한 함수
+    int idx = 1;
+    node_type* p = head;
+
+    while (p != NULL) {
+        p->data.index = idx; //index 세이브 시키고
+        idx++; //세이브 한 변수에 1더하기
+        p = p->next; //후에 다음 노드로
+    }
+}
+void delete_stock(node_type** head,int*p1,int* p2) {
     int dex;
     node_type* p = *head;
     node_type* prev = NULL;
@@ -84,6 +94,14 @@ void delete_stock(node_type** head) {
     if (p->data.index == dex) {
         *head = p->next;
         free(p);
+
+        // 리스트가 비면 상태 업데이트
+        if (*head == NULL) {
+            *p1 = 0;
+            *p2 = 0;
+            return;
+        }
+        reorder_index(*head);
         printf("번호 %d 번 주식이 삭제되었습니다.\n", dex);
         return;
     }
@@ -93,6 +111,12 @@ void delete_stock(node_type** head) {
         if (p->data.index == dex) {
             prev->next = p->next;  // 이전 노드가 다음 노드를 가리키게 함
             free(p);
+            if (*head == NULL) {
+                *p1 = 0;
+                *p2 = 0;
+                return;
+            }
+            reorder_index(*head);
             printf("번호 %d 번 주식이 삭제되었습니다.\n", dex);
             return;
         }
@@ -107,8 +131,6 @@ void add_stock(node_type** head) {
     node_type* p;
     p = *head;
     int dex;
-    int add_count;
-    int new_price;
     printf("\n");
     printf("\n");
     printf("추가 매수 할 주식의 번호을 알려주세요:");
@@ -135,7 +157,7 @@ void add_stock(node_type** head) {
             double new_avg = (double)(old_total + add_total) / new_count;
 
             int old_loss = (p->data.past_price - p->data.now_price) * p->data.stock_count;
-            int new_loss = (new_avg - p->data.now_price) * new_count;
+            double new_loss = (new_avg - p->data.now_price) * new_count;
             double reduced_loss = (double)old_loss - (double)new_loss;
 
             printf("\n===== 물타기 결과 =====\n");
@@ -208,19 +230,43 @@ void charge_calculate(node_type** head) {
     printf("해당 번호의 주식이 존재하지 않습니다.\n");
 }
 void all_sell(node_type** head) {
-    node_type* p;
-    p = *head;
-    int total = 0;
+    node_type* p = *head;
+    int total_profit = 0;
+    int sell_count = 0;
+
+    printf("\n=========================================\n");
+    printf("         이익 발생 주식 전체 매도 결과\n");
+    printf("=========================================\n");
+
     while (p != NULL) {
-        if (p->data.past_price < p->data.now_price) //현재가가 더 클때만 연산하기
-        {
-            total += (p->data.now_price - p->data.past_price); //합산
+
+        int buy_price = p->data.past_price;
+        int sell_price = p->data.now_price;
+        int count = p->data.stock_count;
+
+        // 이익 나는 경우만 처리
+        if (sell_price > buy_price) {
+            int profit = (sell_price - buy_price) * count;
+            total_profit += profit;
+            sell_count++;
+
+            printf("주식 no.%d  (%s)\n", p->data.index, p->data.stock_name);
+            printf("과거가: %d원 | 현재가: %d원 | 수량: %d주\n",
+                buy_price, sell_price, count);
+            printf("→ 이익: %d원\n\n", profit);
         }
-        p = p->next;//다음 노드로 넘어가기
+
+        p = p->next;
     }
-    printf("\n");
-    printf("\n");
-    printf("이익 본 것을 다 팔면 %d 원입니다\n.",total);
-    printf("\n");
-    printf("\n");
+
+    if (sell_count == 0) {
+        printf("이익이 발생한 주식이 없습니다. (매도 없음)\n");
+        printf("=========================================\n\n");
+        return;
+    }
+
+    printf("-----------------------------------------\n");
+    printf("총 이익: %d원\n", total_profit);
+    printf("총 %d개 종목이 매도되었습니다.\n", sell_count);
+    printf("=========================================\n\n");
 }
